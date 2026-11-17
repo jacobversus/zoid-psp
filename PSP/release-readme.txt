@@ -24,7 +24,7 @@ Then put your files in these folders on the root of the Memory Stick
     MUSIC/    MP3, FLAC, WAV, M4A. Folders are fine. cover.jpg / folder.jpg
               in a folder is used as the cover. A .lrc file beside a song
               gives synced lyrics.
-    VIDEO/    .mp4 videos (see VIDEOS below)
+    VIDEO/    .mp4 videos (convert them with Convert for PSP, see COMPANION TOOLS)
     BOOKS/    .cbz files, or folders of .jpg/.png pages. A folder of
               volumes is shown as a series.
 
@@ -36,13 +36,9 @@ NAMES MUST BE PLAIN ENGLISH LETTERS
 -----------------------------------
 A real PSP cannot open a file or folder whose name has letters such as
 é, ü, ½ or Japanese characters. Song tags can use any language; only the file
-and folder names are affected. After copying files to the Memory Stick, run:
-
-    powershell -ExecutionPolicy Bypass -File Tools\fix-names.ps1 -Drive E:
-
-(use your Memory Stick's drive letter). It renames everything in BOOKS,
-MUSIC, VIDEO and PODCASTS and keeps your bookmarks and playlists working.
-Add -WhatIf to see the changes first.
+and folder names are affected. After copying files to the Memory Stick,
+double-click Tools\Fix PSP Names.bat with the PSP connected (see COMPANION
+TOOLS below).
 
 
 CONTROLS
@@ -64,27 +60,46 @@ X zooms in, Square zooms out, SELECT switches reading direction, and
 Triangle shows all controls, including upright reading.
 
 
-VIDEOS
-------
-ZOID plays H.264 .mp4 files up to 720x480. For the best results, convert
-videos with the included tool, which makes a 480x272 file and puts the
-soundtrack and subtitles inside it (Windows 10 or 11):
+COMPANION TOOLS (WINDOWS 10 AND 11)
+-----------------------------------
+The Tools folder has helpers for getting your files ready. Keep the Tools
+folder together (the .bat files run the scripts in Tools\scripts).
 
-    powershell -ExecutionPolicy Bypass -File Tools\convert-for-psp.ps1 -Source movie.mkv -Destination "PSP Videos\movie"
+  Add Desktop Shortcuts.bat   Run once: puts the four tools below on your
+                              Desktop, so you can drag files onto them.
 
-It uses Windows' own encoder, or ffmpeg if it is installed (smaller, sharper
-files). Only DRM-free videos can be converted.
+  Convert for PSP.bat         Drag videos (or a folder of them) onto it.
+                              PSP-ready .mp4 files (480x272, with the
+                              soundtrack and subtitles inside) appear in
+                              "PSP Videos" on your Desktop. Copy them into
+                              VIDEO. Works with .mkv .mp4 .m4v .avi .mov .wmv
+                              .webm. Only DRM-free videos can be converted.
 
+  Shrink Books for PSP.bat    Drag books (.cbz, .cbr, or a folder of them)
+                              onto it. Copies about a quarter of the size
+                              appear in "PSP Books" on your Desktop; .cbr
+                              books, which ZOID can't read, become .cbz.
+                              Drag the Memory Stick's BOOKS folder onto it to
+                              shrink the books already there (it asks first).
 
-SMALLER BOOKS
--------------
-Comic and manga scans are often far bigger than the PSP needs. This makes
-copies about a quarter of the size (needs 7-Zip installed):
+  Fix PSP Names.bat           Double-click with the PSP connected. Lists the
+                              file and folder names a PSP can't open, then
+                              renames them after you press Y, keeping your
+                              bookmarks and playlists working.
 
-    powershell -ExecutionPolicy Bypass -File Tools\shrink-books.ps1 -Source "My Books" -Dest "PSP Books"
+  Check Video for PSP.bat     Drag an .mp4 onto it to see whether ZOID can
+                              play it as it is.
 
-It also converts .cbr (RAR) books, which ZOID can't read, to .cbz.
-shrink-dropped.ps1 does the same for files dragged onto a shortcut to it.
+  Install Helpers.bat         Offers to install two free programs through
+                              Windows' winget: 7-Zip (needed only for .cbr
+                              books) and FFmpeg (optional; makes converted
+                              videos smaller and sharper).
+
+  PSP (ZOID) HandBrake presets.json
+                              If you'd rather use HandBrake: Presets >
+                              Import, then pick "PSP (ZOID) - English" or
+                              "PSP (ZOID) - Japanese". Convert for PSP gives
+                              more reliable sound on a real PSP.
 
 
 FILES ZOID WRITES
@@ -97,7 +112,7 @@ on). Delete zoid-settings.txt to reset the settings.
 KNOWN LIMITS
 ------------
 - Apple Lossless (ALAC) .m4a files are not supported.
-- .cbr (RAR) books must be converted to .cbz (see SMALLER BOOKS).
+- .cbr (RAR) books must be converted to .cbz (Shrink Books for PSP does it, see COMPANION TOOLS).
 - Radio plays MP3 and AAC stations. HLS and Ogg/Opus stations are not listed.
 - The iHeartRadio directory is the one iHeart's website uses. It is not an
   official public API and may change.

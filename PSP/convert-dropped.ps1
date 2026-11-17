@@ -4,14 +4,14 @@
 param([Parameter(ValueFromRemainingArguments)][string[]]$Paths)
 $out = Join-Path ([Environment]::GetFolderPath('Desktop')) 'PSP Videos'
 $kinds = '.mkv', '.mp4', '.m4v', '.avi', '.mov', '.wmv', '.webm'
-$jobs = foreach ($p in $Paths) {
+$jobs = @(foreach ($p in $Paths) {
     $item = Get-Item -LiteralPath $p
     if ($item.PSIsContainer) {
         Get-ChildItem -LiteralPath $item.FullName -Recurse -File | Where-Object { $_.Extension -in $kinds } | Sort-Object FullName |
             ForEach-Object { [pscustomobject]@{ File = $_; Folder = Join-Path (Join-Path $out $item.Name) $_.DirectoryName.Substring($item.FullName.Length) } }
     }
     elseif ($item.Extension -in $kinds) { [pscustomobject]@{ File = $item; Folder = $out } }
-}
+})
 if (-not $jobs) { Write-Host 'No videos found in what was dropped.'; Read-Host 'Press Enter to close'; return }
 $n = 0; $failed = @()
 foreach ($j in $jobs) {

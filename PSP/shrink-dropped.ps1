@@ -20,5 +20,5 @@ foreach ($p in $Paths) {
 }
 Write-Host ''
 Write-Host "Done. New copies (if any) are in: $out" -ForegroundColor Green
-Write-Host 'Copy what is inside that folder into the BOOKS folder on your PSP, then run fix-names.ps1 as usual.'
+Write-Host 'Copy what is inside that folder into the BOOKS folder on your PSP, then run Fix PSP Names (fix-names.ps1).'
 Read-Host 'Press Enter to close'

@@ -24,7 +24,22 @@ More screenshots are in [docs/screenshots](docs/screenshots).
 
 Download the latest zip from the Releases page and copy its `PSP` folder to the root of your Memory Stick, so you have `PSP/GAME/ZOID/EBOOT.PBP` and `PSP/GAME/ZOID/zoidvol.prx`. Custom firmware is required. It's tested on a PSP-3000 with ARK-5, and PSP Go internal storage works too.
 
-Put music in `MUSIC`, videos in `VIDEO` and books in `BOOKS` on the root of the Memory Stick. The `README.txt` in the zip covers controls, file names, video conversion and shrinking books.
+Put music in `MUSIC`, videos in `VIDEO` and books in `BOOKS` on the root of the Memory Stick. The `README.txt` in the zip covers controls, file names and the companion tools.
+
+## Companion tools (Windows)
+
+The zip's `Tools` folder has drag-and-drop helpers for getting files ready. Run **Add Desktop Shortcuts** once to put them on your Desktop.
+
+| Tool | What it does |
+|---|---|
+| **Convert for PSP** | Drop videos on it: makes 480x272 `.mp4` files with the soundtrack and subtitles inside. Uses Windows' own encoder, or FFmpeg if installed. |
+| **Shrink Books for PSP** | Drop books on it: makes copies about a quarter of the size, and turns `.cbr` into `.cbz`. |
+| **Fix PSP Names** | Renames files on the Memory Stick that a PSP can't open (accents, `½`, Japanese), keeping bookmarks and playlists working. |
+| **Check Video for PSP** | Drop an `.mp4` on it to see whether ZOID can play it. |
+| **Install Helpers** | Offers to install 7-Zip (for `.cbr` books) and FFmpeg (smaller, sharper videos) through winget. |
+| **HandBrake presets** | `PSP (ZOID) - English` and `- Japanese`, for converting in HandBrake instead. |
+
+The launchers are in [PSP/companion](PSP/companion), and the scripts they run are in `PSP`.
 
 ## Building
 

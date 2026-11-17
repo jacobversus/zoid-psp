@@ -17,7 +17,12 @@ Copy-Item $eboot (Join-Path $stage 'PSP\GAME\ZOID\EBOOT.PBP')
 Copy-Item (Join-Path $PSScriptRoot 'zoidvol.prx') (Join-Path $stage 'PSP\GAME\ZOID\zoidvol.prx')
 Copy-Item (Join-Path $PSScriptRoot 'release-readme.txt') (Join-Path $stage 'README.txt')
 Copy-Item (Join-Path $PSScriptRoot 'third_party\bearssl\LICENSE.txt') (Join-Path $stage 'LICENSES\BearSSL.txt')
-foreach($t in 'fix-names.ps1','shrink-books.ps1','shrink-dropped.ps1','convert-for-psp.ps1','convert-dropped.ps1','embed-extras.ps1','extract-subtitles.ps1','HandBrake-PSP.json'){Copy-Item (Join-Path $PSScriptRoot $t) (Join-Path $stage "Tools\$t")}
+# Tools: double-click / drag-and-drop launchers (companion\*.bat) on top, the scripts they run in Tools\scripts
+New-Item -ItemType Directory -Force (Join-Path $stage 'Tools\scripts') | Out-Null
+Get-ChildItem (Join-Path $PSScriptRoot 'companion') -Filter '*.bat' | Copy-Item -Destination (Join-Path $stage 'Tools')
+Get-ChildItem (Join-Path $PSScriptRoot 'companion\scripts') -Filter '*.ps1' | Copy-Item -Destination (Join-Path $stage 'Tools\scripts')
+foreach($t in 'fix-names.ps1','shrink-books.ps1','shrink-dropped.ps1','convert-for-psp.ps1','convert-dropped.ps1','embed-extras.ps1','extract-subtitles.ps1','check-video.ps1'){Copy-Item (Join-Path $PSScriptRoot $t) (Join-Path $stage "Tools\scripts\$t")}
+Copy-Item (Join-Path $PSScriptRoot 'HandBrake-PSP.json') (Join-Path $stage 'Tools\PSP (ZOID) HandBrake presets.json')
 $zip=Join-Path $out "ZOID-PSP-$Version.zip"
 if(Test-Path $zip){Remove-Item $zip}
 # Compress-Archive in Windows PowerShell 5.1 writes '\' in entry names, which Mac and Linux unzip
