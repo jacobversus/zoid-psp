@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/logo.png" alt="ZOID" width="360"></p>
+
 # ZOID for PSP
 
 A homebrew media app for the Sony PSP: music (MP3, FLAC, WAV, M4A/AAC), videos, internet radio, podcasts, and manga and comics, in nine themes. Everything is drawn by the PSP's GPU at 60 fps, and audio and video use the PSP's hardware decoders wherever they can.

@@ -41,7 +41,8 @@ Preferences live in `zoid-settings.txt` beside the EBOOT (format `ZOID_UI_4`). O
 
 ## Build and test
 
-- `./build.ps1` builds the normal EBOOT with `pspdev-win` beside `PSP`. It links `pspgu`, `jpeg`, `png16` and `z`.
+- `./build.ps1` builds the normal EBOOT with `pspdev-win` beside `PSP`. It links `pspgu`, `jpeg`, `png16` and `z`, and packs `ICON0.PNG` (the 144x80 XMB icon) and `PIC1.PNG` (the 480x272 XMB background).
+- `./make-icon.ps1` redraws `ICON0.PNG` and `PIC1.PNG` (Bahnschrift, from Windows), and with `-Logo <path>` a 864x480 logo. The PNGs are committed, so building doesn't need the font.
 - `./run-test.ps1 -Kind Transport` runs the UI test: 158 checks plus screenshots of Home in all six themes, Library, Now Playing in all themes, Settings, and a folder of Japanese, Korean, Russian, Greek, Polish and accented names. It also covers a 600-song folder and Shuffle all songs.
 - `./run-test.ps1 -Kind Queue` runs the playback, queue and video test (57 checks).
 - `./run-test.ps1 -Kind Net` runs the internet radio, podcasts and online lyrics test (120 checks) against `net-test-server.cs`, a stand-in for Radio Browser, iHeartRadio's directory, LRCLIB, the iTunes podcast directory, a podcast feed with its episodes, and a few stations on 127.0.0.1:8088 (started with `dotnet run`; its test streams are made with ffmpeg). Emulated Wi-Fi is turned on for this test only. Add `-Online` for three more checks over the real internet: lyrics from lrclib.net, an HTTPS SomaFM stream, and 91X's HTTPS stream (its server leaves out the GlobalSign AlphaSSL 2025 intermediate certificate, so `trust_anchors.h` carries that intermediate; it runs until 2027-05-20), all through BearSSL.

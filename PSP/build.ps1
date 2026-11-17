@@ -77,7 +77,8 @@ try {
     # large progressive JPEGs, which decode whole (a 4500 x 3206 spread takes about 29 MB)
     & (Join-Path $bin 'mksfoex.exe') -d MEMSIZE=1 'ZOID' PARAM.SFO
     if ($LASTEXITCODE) { throw 'PSP SFO packaging failed' }
-    & (Join-Path $bin 'pack-pbp.exe') EBOOT.PBP PARAM.SFO NULL NULL NULL NULL NULL zoidpsp.prx NULL
+    # ICON0.PNG (144x80) and PIC1.PNG (480x272) are the XMB icon and background, drawn by make-icon.ps1
+    & (Join-Path $bin 'pack-pbp.exe') EBOOT.PBP PARAM.SFO ICON0.PNG NULL NULL PIC1.PNG NULL zoidpsp.prx NULL
     if ($LASTEXITCODE) { throw 'PSP EBOOT packaging failed' }
 } finally {
     Pop-Location
