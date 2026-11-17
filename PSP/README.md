@@ -1,0 +1,131 @@
+# ZOID for PSP (1.0)
+
+A music player for MP3, FLAC, WAV and M4A (AAC) files in `MUSIC` on the Memory Stick (`ms0:`) or PSP Go internal storage (`ef0:`). Install `EBOOT.PBP` at `PSP/GAME/ZOID/EBOOT.PBP`.
+
+## Screens
+
+Four full screens, never crammed together:
+
+- **Home**: where ZOID starts. Five big tiles (Music, Videos, Podcasts, Radio, Books) and a Settings bar, each drawn in the theme's own style: rounded accent tiles (Zoid), chamfered neon frames with a chromatic icon (Cyberpunk), tube outlines that invert when picked (Phosphor), glass bubbles that turn lime (Y2K), rack units with a red readout and a status LED (Studio Rack), cream cards with a hairline border and the picked one in pale red (Paper). The date and time sit along the top, and what is playing along the bottom. Pressing Circle enough always ends up here: at the top of MUSIC, VIDEO, Podcasts or Internet Radio, Circle goes Home with that section's tile picked.
+- **Library**: folders and songs in big rows (8 per screen). Songs show their tag title and artist. The playing song is marked in the accent color. A small bar at the bottom shows what's playing. At the top of MUSIC, **Shuffle all songs** plays every song in every folder of MUSIC, shuffled (Playlists and VIDEO are skipped; hold X on it for Play all in order or Add all to playlist). A folder can hold up to 10,000 items; past that the header says "Showing 10000 of N".
+- **Sort** (hold X on any row in MUSIC or VIDEO, then Sort): **Album, disc, track** (the default for music), **Track number**, **Name A-Z**, **Name Z-A**, **File name (1, 2, 10)** (the default for video), **Newest first** or **Oldest first**. Album order reads each song's tags (MP3, FLAC, M4A), so a two-disc set kept in one folder plays disc 1 then disc 2, and a mixed album plays from the first track to the last; songs without tags fall back to their file names. MUSIC and VIDEO each remember their own order. X on a song, Play all and Add all to playlist all follow the order shown, and changing it while a folder plays re-orders that queue without stopping the song. Playlists keep their own order. Shuffle all (the row, a folder or a playlist) shuffles only that queue: picking an album afterward plays it in order.
+- **Now Playing**: cover art, title, artist, album, one to three visualizer panels (or none), the seek bar and five transport buttons.
+- **Settings**: theme, visualizers, panel effects, seek step, shuffle, repeat, gapless playback, button mappings and Exit.
+- **Volume boost** (Settings > Sound): movies, radio and podcasts are mastered much quieter than music (films keep dialogue 20-30 dB under their peaks; music sits around -8 dBFS RMS), so at full volume they were hard to hear. An automatic leveler raises quiet passages toward a target, backs off when the sound gets loud and leaves near-silence alone; a look-ahead peak limiter then holds the raised peaks just under full scale so nothing clips. Five levels, each about 3 dB louder: Off, Low (up to +12 dB), Medium (+18), High (+22, the default) and Max (+26 to +30, about as loud as music). Music is never boosted. Saved in the settings file (`ZOID_UI_12`; older Normal and Strong become High and Max).
+
+## Controls
+
+| Button | Home | Library | Now Playing | Settings |
+| --- | --- | --- | --- | --- |
+| D-pad / stick | Left/Right move along the tiles, Down to Settings | Up/Down move, Left/Right page | Move between buttons, seek bar and visualizers | Up/Down move, Left/Right change |
+| X | Open the tile | Open folder / play song (opens Now Playing) | Press the focused button; on a visualizer, next effect | Change / Exit |
+| Circle | | Parent folder (at the top: Home) | Back to Library | Close |
+| Triangle | Now Playing | Go to Now Playing | Go to Library | |
+| Select | Settings | Settings | Settings | Close |
+
+On the seek bar, Left/Right seek right away by the seek step. START, L, R and Square default to Play/Pause, Previous, Next and Settings. All four can be remapped in Settings, including to "Library / Now Playing". HOME exits.
+
+## Look
+
+Themes: **Zoid** (dark with lime), **Paper** (desktop ZOID's Paper theme, `paper.h`: off-white stock, black ink in Cambria, red-pen accents, matte e-ink displays with no glow; Now Playing is the desktop's e-ink page with the time set large over an italic "elapsed", a red small-caps kicker over an italic title, a hairline meter that redraws in slow steps, bare ink transport keys around a black round play key, and a waveform seek bar of 1 px ink strokes), plus **Cyberpunk** and **Phosphor**, which follow desktop ZOID (`hud.h`, colors from `SimplePlayer/Themes/Cyber.xaml` and `Phosphor.xaml`). Their Now Playing screen is a HUD (square transport keys, clock, title block, waveform seek bar) over a rack of stacked visualizers. The Library is a song table with an inverse-video header. Cyberpunk uses Bahnschrift SemiBold Condensed, neon gradient rims, scan lines, a chamfered clock and a chromatic title glitch. Phosphor uses Lucida Console, rounded tube edges, bloom, a blinking cursor and CRT lines with vignetting. Speed: the CPU runs at 333 MHz, and tags and cover art load on a low-priority thread (`zoid_meta`). Settings > Frame rate shows FPS and per-frame CPU time. Everything is drawn by the PSP's GPU from one texture atlas (`gfx.h`): Bahnschrift glyphs, smooth antialiased icons made from distance fields, rounded shapes and a glow. Frames run at 60 fps with vsync.
+
+Cover art comes from embedded ID3 artwork (JPEG or PNG) or from `cover.jpg` / `folder.jpg` / `front.jpg` / `cover.png` / `folder.png` / `AlbumArtSmall.jpg` in the song's folder. Tags: ID3v2.2–2.4 and ID3v1 (`tags.h`). Text is kept as UTF-8 (tags, file names, lyrics, subtitles; non-UTF-8 file names are read as Latin-1). English letters use the theme font; any other letter (accents, Greek, Cyrillic, Japanese, Chinese, Korean) is drawn from the PSP's own system fonts in `flash0:/font` (`ltn0`, `jpn0`, `kr0`), read by `sysfont.h` and kept in a 361-letter glyph cache texture. A letter no system font has falls back to its plain English letter, or "?".
+
+Visualizers (`visualizers.h`): up to three side by side. Press X on a panel to open the chooser. All 15 desktop rack visualizers are ported (Spectrum Bars, Mirror Bars, Spectrum Line, Oscilloscope, Radial, Spectrogram, Level Meter, Starfield, Ridgelines, Phase Scope, Ring Scope, Fountain, Tunnel, LED Matrix, VU Meters), plus the PSP extras Wave Ribbons, Orbit, Rain and Plasma Grid. Ids 0-9 keep their 2.0 meaning in the settings file. In Cyberpunk and Phosphor, Down moves from the buttons toward the visualizers, matching that layout. X on the song that is already playing reopens Now Playing without restarting it.
+
+## Playback
+
+Unchanged from 1.8: two prepared MP3 decoders give gapless playback across tracks. The sparse frame index handles duration and seeking for CBR and VBR files. Playing a song snapshots that folder as the queue. Shuffle and repeat (Off / Song / All) work as before. Failures show the stage and PSP error code and are appended to `audio-error.log`. `startup.log` records startup checkpoints.
+
+Preferences live in `zoid-settings.txt` beside the EBOOT (format `ZOID_UI_4`). Older files keep their mappings and playback choices and switch to the new look.
+
+## Build and test
+
+- `./build.ps1` builds the normal EBOOT with `pspdev-win` beside `PSP`. It links `pspgu`, `jpeg`, `png16` and `z`.
+- `./run-test.ps1 -Kind Transport` runs the UI test: 158 checks plus screenshots of Home in all six themes, Library, Now Playing in all themes, Settings, and a folder of Japanese, Korean, Russian, Greek, Polish and accented names. It also covers a 600-song folder and Shuffle all songs.
+- `./run-test.ps1 -Kind Queue` runs the playback, queue and video test (57 checks).
+- `./run-test.ps1 -Kind Net` runs the internet radio, podcasts and online lyrics test (120 checks) against `net-test-server.cs`, a stand-in for Radio Browser, iHeartRadio's directory, LRCLIB, the iTunes podcast directory, a podcast feed with its episodes, and a few stations on 127.0.0.1:8088 (started with `dotnet run`; its test streams are made with ffmpeg). Emulated Wi-Fi is turned on for this test only. Add `-Online` for three more checks over the real internet: lyrics from lrclib.net, an HTTPS SomaFM stream, and 91X's HTTPS stream (its server leaves out the GlobalSign AlphaSSL 2025 intermediate certificate, so `trust_anchors.h` carries that intermediate; it runs until 2027-05-20), all through BearSSL.
+- `run-test.ps1` copies the emulator's free stand-in system fonts into `memstick/PSP/NAND/flash0/font` (the emulator's flash0 for games, which starts empty). A real PSP already has them.
+- All tests are muted (all emulator volumes zero) and use PPSSPP's software renderer so the screenshots match VRAM exactly. `inspect-captures.ps1 -Tag v2` converts the screenshots to PNG in `Build/PSP-QA`.
+- Test builds are emulator-only. Do not install them on the PSP. Run `build.ps1` with no switches before installing.
+
+The 1.8 sources are saved in `Build/PSP-v18-backup`.
+
+## Battery, resume and mixing
+
+- **Screen off**: the HOLD switch, a button mapped to "Screen off", or Settings > Turn screen off. Drawing stops and the CPU drops to 222 MHz while audio keeps playing. Any button turns the screen back on (HOLD: flip it back). The backlight itself is kernel-only, so use the PSP's own screen button to turn it off as well.
+- **CPU speed**: Settings > CPU speed: 333 MHz (fast), 222 MHz (saves battery), or **Set by ARK-5**. With Set by ARK-5, ZOID never changes the clock (not at startup, for video or with the screen off), so ARK-5's own overclock (up to 483 MHz; 433 MHz is stable on most PSPs) stays in effect. Pick the speed in ARK-5 and check it with ARK-5's Overclock Stress Tester. If ARK-5 applies its speed when an app launches, restart ZOID after choosing Set by ARK-5.
+- **Resume on start**: the song and position are saved to `zoid-resume.txt` every 15 s, on each song change and on exit. At launch, ZOID reopens that song paused at that point on Now Playing. X or START plays.
+- **Sleep and wake**: a power callback sees the PSP wake up. Memory Stick file handles go stale during sleep, so ZOID drops the prepared next song and reopens the current one at the same position.
+- **Mixing** (the key under the transport keys, or Settings > Mixing): Gapless, Trim silence (skips quiet intros up to 10 s and ends silent tails after 0.8 s), Crossfade (2-12 s, equal-power, using the second prepared decoder; the incoming song continues rather than restarting), or Normal (a gap between songs).
+
+## Lossless files (FLAC, WAV)
+
+- `.flac` and `.wav` songs show up in the Library next to MP3s and work with the queue, gapless playback, crossfade, trim silence, seeking, resume, playlists and the equalizer.
+- They are decoded on the CPU (`softdec.c`, using the public-domain `dr_flac` and `dr_wav` in `third_party/`); MP3 stays on the hardware decoder.
+- The PSP outputs 16-bit stereo at up to 48 kHz. 24-bit files play at 16 bits, 88.2/96 kHz are halved and 176.4/192 kHz are quartered, and surround files use their front left and right channels.
+- Tags: FLAC Vorbis comments (title, artist, album) and embedded FLAC cover art; WAV `LIST/INFO` titles. Folder `cover.jpg` etc. work as for MP3.
+- `make-lossless-test.ps1` writes the test songs in `MUSIC/Zoid Lossless Test` that the Queue test plays.
+
+## M4A (AAC)
+
+- `.m4a`, `.m4b` and `.mp4` files in `MUSIC` play like the rest (an MP4 plays its sound only; movies go in `VIDEO`), with gapless playback, crossfade, seeking and resume.
+- `m4a.c` reads the MP4 container (sample sizes, chunk offsets) and sends each AAC frame, with an ADTS header added, to the PSP's hardware AAC decoder (`sceAudiocodec`), so the CPU stays mostly idle.
+- AAC-LC up to 48 kHz. HE-AAC files play their AAC-LC core (fine, slightly duller). Apple Lossless (ALAC) `.m4a` files are not supported yet and show an audio error.
+- Tags: iTunes `ilst` title, artist (or album artist), album and `covr` cover art.
+- `make-m4a-test.ps1` encodes the test song with Windows' own AAC encoder and adds tags.
+
+## Videos
+
+- Put movies in `VIDEO` on the Memory Stick (`ef0:/VIDEO` on a PSP Go). The **Videos** tile on Home opens it. It lists only folders and `.mp4` / `.m4v` files. An `.mp4` in `MUSIC` plays as audio only.
+- Playing a video stops the music. When the video ends, or you press Circle, the music comes back at the same point, playing or paused as before.
+- Controls: X or START pause, Left/Right 10 s, L/R 1 minute, Triangle switches between the whole picture (black bars) and zoom to fill, Circle goes back. Any button shows the title and progress bar for 3 seconds.
+- Battery: the Media Engine decodes the H.264 video and converts it to screen colors (`sceMpegAvcDecode`), and the sound goes through the hardware AAC decoder. The CPU drops to 222 MHz while a video plays and is restored afterwards, and a frame is drawn only when a new picture is due. Otherwise the loop just waits for the next vblank.
+- Supported: H.264 Baseline or Main profile, up to 720x480, with AAC sound (or no sound). 480x272 or smaller is the most battery-friendly. High-profile or larger files show a message asking to re-encode (HandBrake's PSP preset works).
+- Code: `mp4.c` (shared MP4 reading), `video.c` (frames to the Media Engine), `video_ui.h` (screen, sync to the sound clock, overlay). `make-video-test.ps1` renders the test video with Windows' own encoder.
+
+## Internet radio (Wi-Fi)
+
+- **Radio** is a tile on Home. It opens **Search stations** (the PSP keyboard), **Local stations**, **iHeartRadio stations**, **Popular stations**, **Genres**, then your saved stations.
+- **iHeartRadio stations**: the big commercial AM and FM stations (iHeart's, and many others such as Audacy's), which Radio Browser mostly lacks. Pick a state (A to Z, the US first, then Mexico), then a city (busiest first). The city is kept in `radio-iheart.txt` beside the EBOOT, so next time the row reads **iHeartRadio: <your city>** and opens straight to that city's lineup. Each station shows its dial position and call letters (`103.7 FM  KXXX`). At the top of the lineup, **Search iHeartRadio** searches every city (each result shows its city), and **Change city** picks another. The directory is the one iHeart's own website uses (`api.iheart.com`, no account, not an official public API, so it could change). Only stations with a plain Shoutcast/Icecast stream are listed (AAC, over plain HTTP); HLS-only ones are left out.
+- **Local stations**: pick your country, then a place in it (a state, region or city, busiest first) or all of the country. The choice is kept in `radio-region.txt` beside the EBOOT, so next time Local stations opens straight to that place's stations; **Change local place** at the top of the list picks another. Once a country is picked, Popular stations and each genre list that country's stations; **Anywhere** at the top of the countries goes back to stations from everywhere. Search always looks everywhere.
+- Stations come from [Radio Browser](https://www.radio-browser.info) (free, no account). Only MP3 and AAC stations are listed, since those are what the PSP decodes. HLS and Ogg/Opus stations are left out.
+- Your stations live in `radio.txt` beside the EBOOT: one `Name|URL` per line (`#` starts a comment). `.pls` and `.m3u` links work too. Hold X on a station to save it, or on a saved one to remove it. On first start the file holds a few SomaFM stations and Radio Paradise.
+- A station plays like a song. The list becomes the queue (Previous / Next change station), the title and artist follow the song the station is playing, the end time reads LIVE, and the EQ and visualizers work as usual. The status line shows Connecting, Buffering or Reconnecting. A station paused for 2 minutes stops, and X starts it again live.
+- Wi-Fi: ZOID joins the PSP's own saved networks (Settings > Network Settings on the PSP; WPA2 works). **Settings > Wi-Fi network** picks one, or Auto tries each in turn. Wi-Fi turns off after 3 minutes with nothing playing or loading. The WLAN switch must be on.
+- Code: `net.c` (Wi-Fi with `sceNetApctl`, DNS, non-blocking sockets, an HTTP client with redirects, chunked replies and Shoutcast/Icecast `ICY` headers), `radio.c` (a 256 KB stream buffer, about 16 s at 128 kbps, filled by the `zoid_radio` thread; song titles from ICY metadata; MP3 and AAC frames decoded by the PSP's hardware decoders through `sceAudiocodec`; reconnects when the stream drops), `radio_ui.h` (the Library screens, `radio.txt`, the `zoid_net` worker thread). A station is a `softdec` source with no length, so the audio engine plays it like a file.
+- HTTPS (for lyrics and https stations) uses [BearSSL](https://bearssl.org) 0.6 (MIT, `third_party/bearssl`, built into `libbearssl.a` by `build.ps1`), because the PSP's own SSL predates the ciphers today's sites require. Certificates are checked against the roots in `trust_anchors.h` (Let's Encrypt, Google, DigiCert, GlobalSign, Sectigo, Amazon and others). The date for that check comes from the server's `Date` header, so a PSP whose clock is wrong still connects.
+- Memory: the heap leaves 1.75 MB to the system (`PSP_HEAP_THRESHOLD_SIZE_KB`), as Wi-Fi needs about 850 KB of it once connected.
+
+## Books (manga and comics)
+
+Put `.cbz` files, or folders of `.jpg`/`.png` pages, in `BOOKS` on the Memory Stick (`ef0:/BOOKS` on a PSP Go). A folder of volumes is a series: `BOOKS/Gunsmith Cats - Burst/Gunsmith Cats - Burst 01 (Dark Horse 2007).cbz` shows as **Volume 1** with "Dark Horse 2007" under it. macOS `._` files and `__MACOSX` folders are ignored. **Names must be plain ASCII.** A real PSP cuts a name off at its first other letter (it reads `Ranma ½` as `Ranma `), so that file or folder can never be opened. After copying anything onto the stick, run `fix-names.ps1 -Drive E:`: it renames everything in BOOKS, MUSIC, VIDEO and PODCASTS to plain letters (`Ranma ½` -> `Ranma 1-2`, `Glühwürmchen` -> `Gluhwurmchen`, a heart is dropped) and updates bookmarks, places and playlists to match. A renamed BOOKS folder keeps the name to show in `zoid-title.txt` (one line, UTF-8), so Books shows `Ranma 1/2`; any folder can have one. Books never hides an entry: a folder that won't open is listed as "Couldn't open", and a letter no PSP font has shows as a square. Odd names it meets are logged to `zoid-books-names.txt`. **To save space**, drag books (a `.cbz`, or a folder of them) onto the **Shrink Books for PSP** desktop icon (`shrink-dropped.ps1`): smaller copies go to Desktop\PSP Books, and dropping the stick's own `BOOKS` folder shrinks the books there in place, after a Y to confirm. `shrink-books.ps1` scales every page wider than 960 (the widest Books shows one, 2x zoom sideways) down to 960, saves it as a baseline JPEG at quality 80 (one gray channel for black-and-white pages; PNG pages become JPEGs), and keeps small baseline pages as they are; a volume usually ends up a quarter of its size or less. That also fixes very large progressive JPEG pages (a 2000 x 3000 color page needs about 38 MB to decode), which can be too big for a PSP. Books has its own look, **Manga Paper** (desktop ZOID's Paper theme: off-white paper, black Cambria serif type, red accents); Books always uses it, whatever theme is picked; the players (Music, Videos, Podcasts, Radio) get it by picking **Paper** in Settings > Theme.
+
+- **Shelf**: series and volumes in name order (2 before 10), each marked Unread, Page N of M with a red progress line, or Finished. At the top of BOOKS, **Continue reading** reopens the last book.
+- **Reading**: pages fill the screen's width. D-pad Up/Down or the stick scrolls the page; L and R turn pages. Books read **right to left** (manga) by default: **L is the next page**, the way a printed manga turns, and a zoomed page starts at its top-right corner. **SELECT** switches to left to right (Western comics: R is next, pages start top-left); each book remembers its direction, and a volume opened for the first time takes the direction last used in its series' folder. X zooms in (1.5x, 2x; the stick pans), Circle zooms out of those and at normal size goes back to the shelf. **Square zooms out** a step at a time: 85%, 70%, 55%, then the whole page (steps smaller than the whole page are skipped), and once more back to full width. **Hold X or Square** to zoom smoothly to any size between the whole page and 2x; the size you let go at is kept, and every zoom glides instead of jumping. Triangle shows the controls. START plays or pauses music, which keeps playing while you read. The page number shows briefly after each turn, and a thin red mark at the right edge shows where you are on a tall page.
+- **Upright reading**: Triangle > **Read upright** turns the reader for holding the PSP vertically, with the D-pad at the bottom and the face buttons on top. A page then fills a 272 x 480 screen. The controls turn with the PSP: on the D-pad and the stick, right is up, left is down, up is left and down is right. **Triangle and Cross** (now on your left and right) turn pages; in a right-to-left book Triangle is next, and in a left-to-right book Cross is. **Square** zooms in, in four shorter steps (1.25x, 1.5x, 1.75x, 2x). **Circle** zooms out and at normal size goes back to the shelf. **L** zooms out to the whole page (hold Square or L to zoom smoothly), and **R** opens Bookmarks, where **Read sideways** turns it back. SELECT and START work as before. Books remembers which way you held it (`zoid-books-view.txt`).
+- **Pages** are decoded on a background thread straight to the size they are shown, averaging every source pixel (`page.c`), so lines stay sharp and screentones don't turn into moire. Black-and-white pages are kept as 8-bit gray (a 480-wide page is about 330 KB); color pages as 16-bit. The page before and the two after are kept ready; zoomed pages are made when you zoom and dropped when you turn. CBZ files are read from their zip index (`comic.c`), stored or deflated.
+- **Progress** (page, place on the page, zoom) is saved to `zoid-books.txt` next to the EBOOT, a few seconds after you settle on a page and whenever you leave a book.
+- While a book is open, the PSP's own backlight timer and ZOID's auto screen-off wait at least 5 minutes after the last button.
+
+Emulator timings with real volumes (a real PSP may differ): a 1024x1449 progressive JPEG page about 0.5 s, a 1280x1811 baseline JPEG about 0.55 s, a 1280x1811 PNG about 1 s, a zoom level 1.2-1.5 s. Test: `run-test.ps1 -Kind Books -BookSource <folder of volumes>` (see `make-book-test.ps1`; later runs can leave out `-BookSource`).
+
+## Podcasts (Wi-Fi)
+
+- The **Podcasts** tile on Home opens **Search podcasts** (the PSP keyboard), **Top podcasts**, **Categories**, then (once you subscribe) **Load new episodes**, **Saved episodes** and your shows. The directory is Apple's (the iTunes Search API, free, no account); once a local place is picked under Internet Radio, Top podcasts and Search use that country.
+- Pick a podcast to see its episodes (newest first, from its RSS feed), then **Subscribe**. A subscribed show opens with **Load new episodes** at the top; new episodes are marked New. Hold X on a show to load its new episodes or unsubscribe (which warns first when episodes are saved, and deletes them).
+- **Episodes**: X plays one, and the list becomes the queue. An episode that is not saved streams (MP3), and it seeks and ends like a file. Hold X for **Save for offline**, **Delete saved copy**, **Mark as played** or **Mark as unplayed**. M4A episodes are saved first, then play. **Skips**: on an episode, L (or the Previous key on Now Playing) goes back 15 s and R (or the Next key) forward 30 s; the keys read -15 sec and +30 sec. Any button mapped to Previous or Next does the same while an episode plays. On a streamed episode, skips and seek-bar steps add up on screen and it jumps once you stop pressing, so it never opens a connection per press. Where you stopped is kept, and playing the episode again carries on from there; one played to (nearly) its end is marked Played.
+- **Offline**: subscriptions live in `PODCASTS` on the Memory Stick (`ef0:/PODCASTS` on a PSP Go), a folder per show holding `show.txt` (the feed, its episodes, what was played and where each was left), `cover.jpg` and the saved episodes (named by date and title). Saved episodes play with no Wi-Fi, and Saved episodes lists them all. A save that stops part way (Wi-Fi drops) carries on from where it stopped next time.
+- Now Playing shows the episode's title, the show, its date and length, and the show's cover.
+- Code: `podcast_ui.h` (the directory, a feed reader that reads as the feed arrives and keeps the newest 200 episodes, `show.txt`, the `zoid_pod` thread for lists and feeds, the `zoid_dl` thread that saves episodes). Streaming uses `radio.c`'s on-demand mode: an episode path `url#@seconds,bytes|show|title` asks with HTTP Range requests, waits instead of dropping audio while paused, skips the ID3 tag at the start and ends cleanly.
+
+## Online lyrics
+
+- When a song has no lyrics of its own (no `.lrc` beside it, no embedded lyrics), ZOID asks [LRCLIB](https://lrclib.net) (free, no account) over HTTPS, by artist, title, album and length, then by search. Synced lyrics are preferred.
+- What it finds is saved as a `.lrc` beside the song, so it works offline next time.
+- **Settings > Online lyrics**: Off, When Lyrics is open (the default: Wi-Fi is only used when you look), or For every song (each new song is looked up as it starts).
+- For a station, lyrics are looked up from the station's song title and follow the song from the moment that title came in, so they are close but not exact.
+
+## Public release
+
+`./make-release.ps1` builds the normal EBOOT and writes `Release/ZOID-PSP-1.0.zip` (`-Version` for another number): the EBOOT and `zoidvol.prx` in `PSP/GAME/ZOID`, `release-readme.txt` as `README.txt`, the BearSSL license and the Windows tools (fix-names, shrink-books, convert-for-psp and the scripts they use). It refuses a test build and an EBOOT whose version string doesn't match. The version shown in Settings is in `main.c`, `hud.h` and `zoidstation.h`.

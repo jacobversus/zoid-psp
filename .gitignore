@@ -1,0 +1,14 @@
+# Build output
+*.o
+*.a
+*.elf
+*.prx
+*.PBP
+PARAM.SFO
+PSP/third_party/bearssl/obj/
+
+# Toolchain, test emulator and release zips live beside PSP
+pspdev-win/
+pspdev-win.zip
+Build/
+Release/

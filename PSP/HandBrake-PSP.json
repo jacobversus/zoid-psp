@@ -1,0 +1,135 @@
+{
+    "PresetList":  [
+                       {
+                           "PresetName":  "PSP (ZOID) - Japanese",
+                           "PresetDescription":  "Plays in ZOID on a PSP: 480x272, the original shape, Japanese sound when there is any (else the first track), the first English subtitle track (Blu-ray and DVD picture subtitles are painted onto the video; Square turns text ones on and off in ZOID).",
+                           "Type":  1,
+                           "Default":  false,
+                           "Folder":  false,
+                           "FileFormat":  "av_mp4",
+                           "Optimize":  true,
+                           "Mp4iPodCompatible":  false,
+                           "AlignAVStart":  true,
+                           "PictureWidth":  480,
+                           "PictureHeight":  272,
+                           "PictureUseMaximumSize":  true,
+                           "PictureAllowUpscaling":  false,
+                           "PictureKeepRatio":  true,
+                           "PicturePAR":  "off",
+                           "PictureModulus":  16,
+                           "PictureCropMode":  0,
+                           "PictureDeinterlaceFilter":  "off",
+                           "PictureDetelecine":  "off",
+                           "PictureDenoiseFilter":  "off",
+                           "PictureSharpenFilter":  "off",
+                           "VideoEncoder":  "x264",
+                           "VideoPreset":  "slow",
+                           "VideoTune":  "",
+                           "VideoProfile":  "main",
+                           "VideoLevel":  "3.0",
+                           "VideoOptionExtra":  "ref=2:bframes=2:b-pyramid=none:weightb=0:weightp=0:8x8dct=0:vbv-maxrate=1500:vbv-bufsize=1500",
+                           "VideoQualityType":  1,
+                           "VideoAvgBitrate":  700,
+                           "VideoTwoPass":  false,
+                           "VideoTurboTwoPass":  false,
+                           "VideoFramerate":  "auto",
+                           "VideoFramerateMode":  "cfr",
+                           "AudioLanguageList":  [
+                                                     "jpn"
+                                                 ],
+                           "AudioTrackSelectionBehavior":  "first",
+                           "AudioList":  [
+                                             {
+                                                 "AudioEncoder":  "av_aac",
+                                                 "AudioMixdown":  "stereo",
+                                                 "AudioSamplerate":  "44.1",
+                                                 "AudioBitrate":  128,
+                                                 "AudioNormalizeMixLevel":  false,
+                                                 "AudioTrackDRCSlider":  2.5,
+                                                 "AudioTrackGainSlider":  6
+                                             }
+                                         ],
+                           "AudioCopyMask":  [
+
+                                             ],
+                           "AudioEncoderFallback":  "av_aac",
+                           "SubtitleLanguageList":  [
+                                                        "eng"
+                                                    ],
+                           "SubtitleTrackSelectionBehavior":  "first",
+                           "SubtitleAddForeignAudioSubtitle":  true,
+                           "SubtitleAddForeignAudioSearch":  false,
+                           "SubtitleBurnBehavior":  "none",
+                           "SubtitleBurnBDSub":  true,
+                           "SubtitleBurnDVDSub":  true,
+                           "ChapterMarkers":  false
+                       },
+                       {
+                           "PresetName":  "PSP (ZOID) - English",
+                           "PresetDescription":  "Plays in ZOID on a PSP: 480x272, the original shape, English sound when there is any (else the first track), no subtitles (use the Japanese preset for a film that needs English subtitles).",
+                           "Type":  1,
+                           "Default":  false,
+                           "Folder":  false,
+                           "FileFormat":  "av_mp4",
+                           "Optimize":  true,
+                           "Mp4iPodCompatible":  false,
+                           "AlignAVStart":  true,
+                           "PictureWidth":  480,
+                           "PictureHeight":  272,
+                           "PictureUseMaximumSize":  true,
+                           "PictureAllowUpscaling":  false,
+                           "PictureKeepRatio":  true,
+                           "PicturePAR":  "off",
+                           "PictureModulus":  16,
+                           "PictureCropMode":  0,
+                           "PictureDeinterlaceFilter":  "off",
+                           "PictureDetelecine":  "off",
+                           "PictureDenoiseFilter":  "off",
+                           "PictureSharpenFilter":  "off",
+                           "VideoEncoder":  "x264",
+                           "VideoPreset":  "slow",
+                           "VideoTune":  "",
+                           "VideoProfile":  "main",
+                           "VideoLevel":  "3.0",
+                           "VideoOptionExtra":  "ref=2:bframes=2:b-pyramid=none:weightb=0:weightp=0:8x8dct=0:vbv-maxrate=1500:vbv-bufsize=1500",
+                           "VideoQualityType":  1,
+                           "VideoAvgBitrate":  700,
+                           "VideoTwoPass":  false,
+                           "VideoTurboTwoPass":  false,
+                           "VideoFramerate":  "auto",
+                           "VideoFramerateMode":  "cfr",
+                           "AudioLanguageList":  [
+                                                     "eng"
+                                                 ],
+                           "AudioTrackSelectionBehavior":  "first",
+                           "AudioList":  [
+                                             {
+                                                 "AudioEncoder":  "av_aac",
+                                                 "AudioMixdown":  "stereo",
+                                                 "AudioSamplerate":  "44.1",
+                                                 "AudioBitrate":  128,
+                                                 "AudioNormalizeMixLevel":  false,
+                                                 "AudioTrackDRCSlider":  2.5,
+                                                 "AudioTrackGainSlider":  6
+                                             }
+                                         ],
+                           "AudioCopyMask":  [
+
+                                             ],
+                           "AudioEncoderFallback":  "av_aac",
+                           "SubtitleLanguageList":  [
+                                                        "eng"
+                                                    ],
+                           "SubtitleTrackSelectionBehavior":  "none",
+                           "SubtitleAddForeignAudioSubtitle":  true,
+                           "SubtitleAddForeignAudioSearch":  false,
+                           "SubtitleBurnBehavior":  "none",
+                           "SubtitleBurnBDSub":  true,
+                           "SubtitleBurnDVDSub":  true,
+                           "ChapterMarkers":  false
+                       }
+                   ],
+    "VersionMajor":  45,
+    "VersionMinor":  0,
+    "VersionMicro":  0
+}
