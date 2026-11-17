@@ -18,7 +18,58 @@ A homebrew media app for the Sony PSP: music (MP3, FLAC, WAV, M4A/AAC), videos, 
 
 ![Now Playing in every theme](docs/screenshots/02-now-playing-all-nine-themes.png)
 
-More screenshots are in [docs/screenshots](docs/screenshots).
+## Screenshots
+
+All screenshots are the PSP's own 480x272 screen, scaled 2x.
+
+### Now Playing
+
+| Cyberpunk | Y2K |
+|---|---|
+| ![Now Playing in Cyberpunk](docs/screenshots/now-playing-cyberpunk.png) | ![Now Playing in Y2K](docs/screenshots/now-playing-y2k.png) |
+| **Studio Rack** | **Paper** |
+| ![Now Playing in Studio Rack](docs/screenshots/now-playing-studio-rack.png) | ![Now Playing in Paper](docs/screenshots/08-paper-now-playing.png) |
+
+### Visualizers
+
+25 visualizers, up to three at once. Press X on a panel to pick another.
+
+| | |
+|---|---|
+| ![Spectrum bars, starfield and ridgelines](docs/screenshots/visualizers-bars-starfield-ridgelines.png) | ![Wave ribbons, orbit and rain](docs/screenshots/visualizers-wave-ribbons-orbit-rain.png) |
+| ![Synth grid, bubbles and sunburst](docs/screenshots/visualizers-synth-grid-bubbles-sunburst.png) | ![Heartbeat, spectrum bars and mirror bars](docs/screenshots/visualizers-heartbeat-spectrum-mirror.png) |
+
+![24 of the visualizers](docs/screenshots/03-visualizers.png)
+
+### Books
+
+The library shows every series and volume with its reading progress, in whichever theme you pick.
+
+![The Books library in four themes](docs/screenshots/books-library-four-themes.png)
+
+| A series and its volumes | Paper theme |
+|---|---|
+| ![A series with per-volume progress](docs/screenshots/books-series-progress.png) | ![The Books library in Paper](docs/screenshots/13-books-shelf.png) |
+
+### Internet radio and podcasts
+
+| A station playing | The same in Cyberpunk |
+|---|---|
+| ![A radio station playing](docs/screenshots/radio-playing.png) | ![A radio station playing in Cyberpunk](docs/screenshots/radio-playing-cyberpunk.png) |
+| **Popular stations** | **Lyrics for the song on air** |
+| ![A list of stations](docs/screenshots/radio-stations.png) | ![Lyrics following a radio station](docs/screenshots/10-radio-live-lyrics.png) |
+| **A podcast episode playing** | **Episodes, saved for offline** |
+| ![A podcast episode playing](docs/screenshots/12-podcast-playing.png) | ![A podcast's episodes in Cyberpunk](docs/screenshots/podcast-episodes-cyberpunk.png) |
+
+### More
+
+| Songs in any language | 10-band equalizer |
+|---|---|
+| ![Song names in many languages](docs/screenshots/05-library-world-names.png) | ![The equalizer](docs/screenshots/06-equalizer.png) |
+| **Synced lyrics (Phosphor)** | **Theme colors** |
+| ![Synced lyrics in Phosphor](docs/screenshots/07-lyrics-phosphor.png) | ![Themes in other colors](docs/screenshots/04-theme-colors.png) |
+
+All screenshots are in [docs/screenshots](docs/screenshots).
 
 ## Install
 
