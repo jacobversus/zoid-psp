@@ -17,9 +17,9 @@
 #include <math.h>
 #include <psppower.h>
 #include <pspsdk.h>
-#include "font.h"
-#include "font_paper.h" /* Books' serif (Manga Paper) */
-#include "font_ms.h"    /* the Zoidstation skins: Arial Rounded, Century Gothic, Segoe UI */
+#include "fonts/font.h"
+#include "fonts/font_paper.h" /* Books' serif (Manga Paper) */
+#include "fonts/font_ms.h"    /* the Zoidstation skins: Arial Rounded, Century Gothic, Segoe UI */
 #include "softdec.h"
 #include "video.h"
 #include "mp4.h"
@@ -1081,7 +1081,7 @@ static unsigned int test_px(void){return video_pixels?video_pixels[(vid.info.hei
 static int test_pod_ep(const char *title,PodEp *out){PodShow s;plock();int ok=show_load("Zoid Test Podcast",&s,1);punlock();int f=0;if(ok){for(int i=0;i<s.n;i++)if(!strcmp(s.eps[i].title,title)){*out=s.eps[i];f=1;}free(s.eps);}return f;}
 #endif
 #ifdef ZOID_BOOKS_TEST
-#include "books_test.h"
+#include "../tests/books_test.h"
 #endif
 #endif
 int main(int argc,char **argv) {

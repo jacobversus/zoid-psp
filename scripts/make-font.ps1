@@ -47,4 +47,4 @@ foreach ($t in $themes) {
     $g.Dispose();$bmp.Dispose();$font.Dispose();$fmt.Dispose()
   }
 }
-[System.IO.File]::WriteAllText((Join-Path $PSScriptRoot $OutFile),$out.ToString())
+[System.IO.File]::WriteAllText((Join-Path (Join-Path $PSScriptRoot '..\src\fonts') $OutFile),$out.ToString())

@@ -2,8 +2,8 @@
 #   ICON0.PNG  144x80   the icon in the XMB's Game menu: a dark tile, lime equalizer bars, "ZOID."
 #   PIC1.PNG   480x272  the XMB background while ZOID is highlighted: dark, a lime glow, faint bars
 #   logo.png   864x480  the same icon at 6x, for the README and posts (-Logo <path>)
-# build.ps1 packs ICON0.PNG and PIC1.PNG into EBOOT.PBP. The PNGs are committed, so a build doesn't need the font.
-param([string]$OutDir=$PSScriptRoot,[string]$Logo)
+# Written to assets\. build.ps1 packs ICON0.PNG and PIC1.PNG into EBOOT.PBP. The PNGs are committed, so a build doesn't need the font.
+param([string]$OutDir=(Join-Path $PSScriptRoot '..\assets'),[string]$Logo)
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
 $LIME='c8f000';$FG='f2f2f4'

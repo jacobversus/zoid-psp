@@ -90,17 +90,23 @@ The zip's `Tools` folder has drag-and-drop helpers for getting files ready. Run 
 | **Install Helpers** | Offers to install 7-Zip (for `.cbr` books) and FFmpeg (smaller, sharper videos) through winget. |
 | **HandBrake presets** | `PSP (ZOID) - English` and `- Japanese`, for converting in HandBrake instead. |
 
-The launchers are in [PSP/companion](PSP/companion), and the scripts they run are in `PSP`.
+They're in [tools](tools), laid out exactly as in the zip.
 
 ## Building
 
 You need Windows and the PSPDEV toolchain.
 
-1. Download the Windows build of the [PSPDEV toolchain](https://github.com/pspdev/pspdev/releases) and unzip it as `pspdev-win` next to the `PSP` folder.
-2. In PowerShell, run `PSP/build.ps1`. It builds BearSSL the first time, then `PSP/EBOOT.PBP` and `PSP/zoidvol.prx`.
-3. `PSP/make-release.ps1` builds the release zip in `Release/`.
+1. Download the Windows build of the [PSPDEV toolchain](https://github.com/pspdev/pspdev/releases) and unzip it as `pspdev-win` next to this repository's folder (or pass `-Toolchain <path>`).
+2. In PowerShell, run `scripts/build.ps1`. It builds BearSSL the first time, then `out/EBOOT.PBP` and `out/zoidvol.prx`.
+3. `scripts/make-release.ps1` builds the release zip in `out/`.
 
-[PSP/README.md](PSP/README.md) is the full technical guide. It covers every screen and file format, the controls, and the automated tests (`run-test.ps1`), which drive a muted PPSSPP emulator placed at `Build/PSP-QA/emulator`.
+| Folder | What's in it |
+|---|---|
+| `src/` | The app. `src/fonts` holds the pre-rendered theme fonts, `src/zoidvol` the small kernel helper, and `src/third_party` BearSSL, dr_flac and dr_wav. |
+| `tools/` | The companion tools, exactly as they ship in the zip. |
+| `scripts/` | Build, release, and the generators for the icon and fonts. |
+| `assets/` | The XMB icon and background. |
+| `docs/` | The [technical guide](docs/technical-guide.md), which covers every screen, file format and control, plus the screenshots. |
 
 ## Credits
 

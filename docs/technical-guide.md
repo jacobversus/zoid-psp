@@ -41,14 +41,16 @@ Preferences live in `zoid-settings.txt` beside the EBOOT (format `ZOID_UI_4`). O
 
 ## Build and test
 
-- `./build.ps1` builds the normal EBOOT with `pspdev-win` beside `PSP`. It links `pspgu`, `jpeg`, `png16` and `z`, and packs `ICON0.PNG` (the 144x80 XMB icon) and `PIC1.PNG` (the 480x272 XMB background).
-- `./make-icon.ps1` redraws `ICON0.PNG` and `PIC1.PNG` (Bahnschrift, from Windows), and with `-Logo <path>` a 864x480 logo. The PNGs are committed, so building doesn't need the font.
-- `./run-test.ps1 -Kind Transport` runs the UI test: 158 checks plus screenshots of Home in all six themes, Library, Now Playing in all themes, Settings, and a folder of Japanese, Korean, Russian, Greek, Polish and accented names. It also covers a 600-song folder and Shuffle all songs.
-- `./run-test.ps1 -Kind Queue` runs the playback, queue and video test (57 checks).
-- `./run-test.ps1 -Kind Net` runs the internet radio, podcasts and online lyrics test (120 checks) against `net-test-server.cs`, a stand-in for Radio Browser, iHeartRadio's directory, LRCLIB, the iTunes podcast directory, a podcast feed with its episodes, and a few stations on 127.0.0.1:8088 (started with `dotnet run`; its test streams are made with ffmpeg). Emulated Wi-Fi is turned on for this test only. Add `-Online` for three more checks over the real internet: lyrics from lrclib.net, an HTTPS SomaFM stream, and 91X's HTTPS stream (its server leaves out the GlobalSign AlphaSSL 2025 intermediate certificate, so `trust_anchors.h` carries that intermediate; it runs until 2027-05-20), all through BearSSL.
+Folders: `src/` the app (`src/fonts` the pre-rendered theme fonts, `src/zoidvol` the kernel helper, `src/third_party` BearSSL, dr_flac and dr_wav), `assets/` the XMB icon and background, `tools/` the companion tools exactly as they ship, `scripts/` build and release, `docs/` this guide and the screenshots, `tests/` the emulator tests (not in the public repository). Everything a build makes goes in `out/`.
+
+- `scripts/build.ps1` builds `out/EBOOT.PBP` and `out/zoidvol.prx` with `pspdev-win` next to the repository's folder (or `-Toolchain <path>`). It links `pspgu`, `jpeg`, `png16` and `z`, and packs `assets/ICON0.PNG` (the 144x80 XMB icon) and `assets/PIC1.PNG` (the 480x272 XMB background).
+- `scripts/make-icon.ps1` redraws `ICON0.PNG` and `PIC1.PNG` (Bahnschrift, from Windows), and with `-Logo <path>` a 864x480 logo. The PNGs are committed, so building doesn't need the font. `scripts/make-font.ps1` likewise redraws `src/fonts`.
+- `tests/run-test.ps1 -Kind Transport` runs the UI test: 158 checks plus screenshots of Home in all six themes, Library, Now Playing in all themes, Settings, and a folder of Japanese, Korean, Russian, Greek, Polish and accented names. It also covers a 600-song folder and Shuffle all songs.
+- `tests/run-test.ps1 -Kind Queue` runs the playback, queue and video test (57 checks).
+- `tests/run-test.ps1 -Kind Net` runs the internet radio, podcasts and online lyrics test (120 checks) against `net-test-server.cs`, a stand-in for Radio Browser, iHeartRadio's directory, LRCLIB, the iTunes podcast directory, a podcast feed with its episodes, and a few stations on 127.0.0.1:8088 (started with `dotnet run`; its test streams are made with ffmpeg). Emulated Wi-Fi is turned on for this test only. Add `-Online` for three more checks over the real internet: lyrics from lrclib.net, an HTTPS SomaFM stream, and 91X's HTTPS stream (its server leaves out the GlobalSign AlphaSSL 2025 intermediate certificate, so `trust_anchors.h` carries that intermediate; it runs until 2027-05-20), all through BearSSL.
 - `run-test.ps1` copies the emulator's free stand-in system fonts into `memstick/PSP/NAND/flash0/font` (the emulator's flash0 for games, which starts empty). A real PSP already has them.
 - All tests are muted (all emulator volumes zero) and use PPSSPP's software renderer so the screenshots match VRAM exactly. `inspect-captures.ps1 -Tag v2` converts the screenshots to PNG in `Build/PSP-QA`.
-- Test builds are emulator-only. Do not install them on the PSP. Run `build.ps1` with no switches before installing.
+- Test builds are emulator-only. Do not install them on the PSP. Run `scripts/build.ps1` with no switches before installing.
 
 The 1.8 sources are saved in `Build/PSP-v18-backup`.
 
@@ -63,7 +65,7 @@ The 1.8 sources are saved in `Build/PSP-v18-backup`.
 ## Lossless files (FLAC, WAV)
 
 - `.flac` and `.wav` songs show up in the Library next to MP3s and work with the queue, gapless playback, crossfade, trim silence, seeking, resume, playlists and the equalizer.
-- They are decoded on the CPU (`softdec.c`, using the public-domain `dr_flac` and `dr_wav` in `third_party/`); MP3 stays on the hardware decoder.
+- They are decoded on the CPU (`softdec.c`, using the public-domain `dr_flac` and `dr_wav` in `src/third_party/`); MP3 stays on the hardware decoder.
 - The PSP outputs 16-bit stereo at up to 48 kHz. 24-bit files play at 16 bits, 88.2/96 kHz are halved and 176.4/192 kHz are quartered, and surround files use their front left and right channels.
 - Tags: FLAC Vorbis comments (title, artist, album) and embedded FLAC cover art; WAV `LIST/INFO` titles. Folder `cover.jpg` etc. work as for MP3.
 - `make-lossless-test.ps1` writes the test songs in `MUSIC/Zoid Lossless Test` that the Queue test plays.
@@ -95,7 +97,7 @@ The 1.8 sources are saved in `Build/PSP-v18-backup`.
 - A station plays like a song. The list becomes the queue (Previous / Next change station), the title and artist follow the song the station is playing, the end time reads LIVE, and the EQ and visualizers work as usual. The status line shows Connecting, Buffering or Reconnecting. A station paused for 2 minutes stops, and X starts it again live.
 - Wi-Fi: ZOID joins the PSP's own saved networks (Settings > Network Settings on the PSP; WPA2 works). **Settings > Wi-Fi network** picks one, or Auto tries each in turn. Wi-Fi turns off after 3 minutes with nothing playing or loading. The WLAN switch must be on.
 - Code: `net.c` (Wi-Fi with `sceNetApctl`, DNS, non-blocking sockets, an HTTP client with redirects, chunked replies and Shoutcast/Icecast `ICY` headers), `radio.c` (a 256 KB stream buffer, about 16 s at 128 kbps, filled by the `zoid_radio` thread; song titles from ICY metadata; MP3 and AAC frames decoded by the PSP's hardware decoders through `sceAudiocodec`; reconnects when the stream drops), `radio_ui.h` (the Library screens, `radio.txt`, the `zoid_net` worker thread). A station is a `softdec` source with no length, so the audio engine plays it like a file.
-- HTTPS (for lyrics and https stations) uses [BearSSL](https://bearssl.org) 0.6 (MIT, `third_party/bearssl`, built into `libbearssl.a` by `build.ps1`), because the PSP's own SSL predates the ciphers today's sites require. Certificates are checked against the roots in `trust_anchors.h` (Let's Encrypt, Google, DigiCert, GlobalSign, Sectigo, Amazon and others). The date for that check comes from the server's `Date` header, so a PSP whose clock is wrong still connects.
+- HTTPS (for lyrics and https stations) uses [BearSSL](https://bearssl.org) 0.6 (MIT, `src/third_party/bearssl`, built into `out/bearssl/libbearssl.a` by `scripts/build.ps1`), because the PSP's own SSL predates the ciphers today's sites require. Certificates are checked against the roots in `trust_anchors.h` (Let's Encrypt, Google, DigiCert, GlobalSign, Sectigo, Amazon and others). The date for that check comes from the server's `Date` header, so a PSP whose clock is wrong still connects.
 - Memory: the heap leaves 1.75 MB to the system (`PSP_HEAP_THRESHOLD_SIZE_KB`), as Wi-Fi needs about 850 KB of it once connected.
 
 ## Books (manga and comics)
@@ -129,4 +131,4 @@ Emulator timings with real volumes (a real PSP may differ): a 1024x1449 progress
 
 ## Public release
 
-`./make-release.ps1` builds the normal EBOOT and writes `Release/ZOID-PSP-1.0.zip` (`-Version` for another number): the EBOOT and `zoidvol.prx` in `PSP/GAME/ZOID`, `release-readme.txt` as `README.txt`, the BearSSL license and the Windows tools (fix-names, shrink-books, convert-for-psp and the scripts they use). It refuses a test build and an EBOOT whose version string doesn't match. The version shown in Settings is in `main.c`, `hud.h` and `zoidstation.h`.
+`scripts/make-release.ps1` builds the normal EBOOT and writes `out/ZOID-PSP-1.0.zip` (`-Version` for another number): the EBOOT and `zoidvol.prx` in `PSP/GAME/ZOID`, `docs/release-readme.txt` as `README.txt`, the BearSSL license and `tools/` as `Tools`. It refuses a test build and an EBOOT whose version string doesn't match. The version shown in Settings is in `main.c`, `hud.h` and `zoidstation.h`.
